@@ -5,24 +5,21 @@ REGISTRY := docker.io
 GIT_SHORT_COMMIT := $(shell git rev-parse --short HEAD)
 IMAGE_TAG ?= 0.1
 
-.PHONY: build
-
-build:
-	@docker build -t $(TAG) -f build/Dockerfile build/
+.PHONY: docker_build
 
 exec:
 	@docker run -it --rm --privileged --cap-add=SYS_ADMIN --cap-add=NET_ADMIN --net=host \
         --name=ble --entrypoint=sh \
         -v $(shell pwd)/src:/app \
-        $(TAG)
+        $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)
 
-run: | build
+run: | docker_build
 	@docker run -it -d --restart=always --privileged --cap-add=SYS_ADMIN --cap-add=NET_ADMIN --net=host \
 	--name=ble --entrypoint=python \
 	-v $(shell pwd)/src:/app \
 	-w /app \
-       	$(TAG) pizerole.py
-	@docker logs -f $(TAG)
+       	$(REGISTRY)/$(APP_NAME):$(BUILD_TAG) pizerole.py
+	@docker logs -f $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)
 
 check-docker-credentials:
 ifndef DOCKER_USER
