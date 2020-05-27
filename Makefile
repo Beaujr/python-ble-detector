@@ -18,8 +18,8 @@ run: | docker_build
 	--name=ble --entrypoint=python \
 	-v $(shell pwd)/src:/app \
 	-w /app \
-       	$(REGISTRY)/$(APP_NAME):$(BUILD_TAG) pizerole.py
-	@docker logs -f $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)
+       	$(APP_NAME):$(BUILD_TAG) pizerole.py
+	@docker logs -f ble
 
 check-docker-credentials:
 ifndef DOCKER_USER
