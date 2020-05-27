@@ -21,6 +21,14 @@ run: | docker_build
        	$(APP_NAME):$(BUILD_TAG) pizerole.py
 	@docker logs -f ble
 
+python-ble-detector:
+	@docker run -it -d --restart=always --privileged --cap-add=SYS_ADMIN --cap-add=NET_ADMIN --net=host \
+	--name=ble_detector --entrypoint=python \
+	-v $(shell pwd)/src:/app \
+	-w /app \
+	beaujr/python-ble-detector:latest \
+	pizerole.py
+
 check-docker-credentials:
 ifndef DOCKER_USER
 	$(error DOCKER_USER is undefined)

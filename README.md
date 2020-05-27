@@ -7,7 +7,7 @@ I personally use this python script to manage smart powersockets via bluetooth b
 ## Installation
 Have docker installed on your Raspberry Pi Zero W
 ```makefile
-make run 
+make python-ble-detector 
 ```
 
 ## Usage
