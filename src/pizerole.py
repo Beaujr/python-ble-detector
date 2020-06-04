@@ -1,56 +1,43 @@
-from bluepy.btle import Scanner, DefaultDelegate
-import http.client
+import ble_devices, actions
 from datetime import datetime
-
-# https://github.com/greghesp/assistant-relay
-RELAY_ASSISTANT = "nuc.beau.cf:3001"
-RELAY_USER = "beau"
-DESK = {'mac': 'AB:CD:EF:GH:IJ:KL', 'name': 'Desk', 'state': 0, 'lastUpdated': datetime.now()}
-BLE_STATES = [DESK]
-
-def toggle(device):
-    conn = http.client.HTTPConnection(RELAY_ASSISTANT)
-    lastUpdated = device.get("lastUpdated", datetime)
-    name = device.get('name')
-    lastToggled = datetime.now() - lastUpdated
-    if lastToggled.seconds > 10:
-        state = "off"
-        if device.get("state") == 0:
-            state = "on"
-        payload = "{\"user\":\"%s\",\"command\":\"turn %s %s\", \"broadcast\": false}" % (RELAY_ASSISTANT, name, state)
-        headers = {
-            'content-type': "application/json",
-            'cache-control': "no-cache"
-        }
-
-        conn.request("POST", "/assistant", payload, headers)
-
-        res = conn.getresponse()
-        data = res.read()
-        print(data.decode("utf-8"))
-        device["lastUpdated"] = datetime.now()
-        if state == "on":
-            device["state"] = 1
-        elif state == "off":
-            device["state"] = 0
-        print(device["lastUpdated"])
-        print("Device %s toggled to %s" % (name, state))
-    else:
-        print("%s last toggled %d seconds ago" % (name, lastToggled.seconds))
-
-
+from bluepy.btle import Scanner, DefaultDelegate
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
         DefaultDelegate.__init__(self)
 
     def handleDiscovery(self, dev, isNewDev, isNewData):
         if isNewDev:
-            for button in BLE_STATES:
-                if button.get('mac') == dev.addr:
-                    print("DETECTED: button: %s, Name: %s" % (button.get('mac'), button.get('name')))
-                    toggle(button)
+            for device in ble_devices.get_devices():
+                if device.get('mac') == dev.addr:
+                    print("DETECTED: button: %s, Name: %s" % (device.get('mac'), device.get('name')))
+                    if device.get('name') == "coffee":
+                        actions.notify(device)
+                    elif device.get('name') == "towel":
+                        actions.broadcast(device)
+                    elif device.get('name') == "livingroom":
+                        if device.get('state') == actions.OFF_STATE:
+                            if device.get('previous_state') == actions.OFF_STATE:
+                                device['state'] = actions.BRIGHTEN_STATE
+                            if device.get('previous_state') == actions.DARKEN_STATE:
+                                device['state'] = actions.BRIGHTEN_STATE
+                            if device.get('previous_state') == actions.BRIGHTEN_STATE:
+                                device['state'] = actions.DARKEN_STATE
+                    else:
+                        actions.toggle(device)
+
 scanner = Scanner().withDelegate(ScanDelegate())
 while True:
     devices = scanner.scan(1.0)
+    if ble_devices.AIRER.get("state") == 1:
+    # lets see if its been on for 8 hours and if so turn it off
+        lastUpdated = ble_devices.AIRER.get("lastUpdated", datetime)
+        timeSinceTurnedOn = datetime.now() - lastUpdated
+        if timeSinceTurnedOn.seconds >= (8*(60*60)):
+        # turn off
+            print("Timer has been on for %d hours and %d minutes" % ((timeSinceTurnedOn.seconds/60/60), ((timeSinceTurnedOn.seconds)/60) % 60))
+            actions.toggle(ble_devices.AIRER)
+    if ble_devices.LIVING_ROOM_LIGHTS.get("state") > 0:
+        print("lights triggered")
+        actions.changeLights(ble_devices.LIVING_ROOM_LIGHTS)
 
 
