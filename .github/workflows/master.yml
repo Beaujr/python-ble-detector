@@ -17,8 +17,8 @@ jobs:
         with:
           buildx-version: latest
           qemu-version: latest
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: Env vars
+        run: printenv
       - name: Build the Docker image AMD64
         run: make docker_build ARCH=linux/arm/v6 DOCKERFILE=Dockerfile ARCHTAG=arm
       - name: Build the Docker image ARM
