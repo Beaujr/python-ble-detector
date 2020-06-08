@@ -54,7 +54,7 @@ docker_build:
 ifeq ($(GITHUB_WORKFLOW),master)
 	docker buildx build \
 	--platform linux/amd64,linux/arm/v5 \
-	--output "type=image,push=true" \
+	--output "type=registry,push=true" \
 	--tag $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT) \
 	--file $(DOCKERFILES)/$(DOCKERFILE) $(DOCKERFILES)
 else
