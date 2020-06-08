@@ -19,7 +19,9 @@ jobs:
           qemu-version: latest
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
-      - name: Build the Docker image
-        run: make docker_build
+      - name: Build the Docker image AMD64
+        run: make docker_build ARCH=linux/arm/v6 DOCKERFILE=Dockerfile
+      - name: Build the Docker image ARM
+        run: make docker_build ARCH=linux/amd64 DOCKERFILE=Dockerfile.amd64
       - name: Push the Docker image
         run: make docker_push DOCKER_USER=beaujr DOCKER_PASS=${{ secrets.DOCKER_PASS }} GITHUB_HEAD_REF=master

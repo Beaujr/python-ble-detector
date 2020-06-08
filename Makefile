@@ -51,10 +51,10 @@ endif
 docker_build:
 ifeq ($(GITHUB_HEAD_REF),master)
 	docker buildx build \
-	--platform linux/arm/v6 \
+	--platform linux/$(ARCH) \
 	--output "type=image,push=false" \
 	--tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG) \
-	--file $(DOCKERFILES)/Dockerfile $(DOCKERFILES)
+	--file $(DOCKERFILES)/$(DOCKERFILE) $(DOCKERFILES)
 else
 	docker build \
 		-t $(REGISTRY)/$(APP_NAME):$(BUILD_TAG) \
