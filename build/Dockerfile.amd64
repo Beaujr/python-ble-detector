@@ -1,4 +1,5 @@
-FROM python@sha256:6c1b18373c4f94353308097772e97ff4d0e596ac3d06cc4b00c3bdc52cd5e8b6
+#FROM python:3.6-slim-buster
+FROM python@sha256:cdb9505dab15e22df319d862de7b5315150f60f77cd855f4c57e9e422f49a384
 RUN apt-get update
 RUN apt-get install build-essential bluez bluez-tools python-dev python-pip libglib2.0-dev libboost-python-dev libboost-thread-dev libbluetooth-dev -y
 
