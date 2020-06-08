@@ -52,13 +52,18 @@ endif
 
 docker_build:
 ifeq ($(GITHUB_WORKFLOW),master)
-	docker buildx build \
+	@docker buildx build \
 	--platform linux/amd64,linux/arm/v5 \
 	--output "type=registry,push=true" \
 	--tag $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT) \
 	--file $(DOCKERFILES)/$(DOCKERFILE) $(DOCKERFILES)
+	@docker buildx build \
+	--platform linux/amd64,linux/arm/v5 \
+	--output "type=registry,push=true" \
+	--tag $(REGISTRY)/$(APP_NAME):latest \
+	--file $(DOCKERFILES)/$(DOCKERFILE) $(DOCKERFILES)
 else
-	docker build \
+	@docker build \
 		-t $(REGISTRY)/$(APP_NAME):$(BUILD_TAG) \
 		-f $(DOCKERFILES)/Dockerfile \
 		./
