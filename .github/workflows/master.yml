@@ -20,8 +20,10 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: Build the Docker image AMD64
-        run: make docker_build ARCH=linux/arm/v6 DOCKERFILE=Dockerfile
+        run: make docker_build ARCH=linux/arm/v6 DOCKERFILE=Dockerfile ARCHTAG=arm
       - name: Build the Docker image ARM
-        run: make docker_build ARCH=linux/amd64 DOCKERFILE=Dockerfile.amd64
+        run: make docker_build ARCH=linux/amd64 DOCKERFILE=Dockerfile.amd64 ARCHTAG=amd64
       - name: Push the Docker image
-        run: make docker_push DOCKER_USER=beaujr DOCKER_PASS=${{ secrets.DOCKER_PASS }} GITHUB_HEAD_REF=master
+        run: make docker_push DOCKER_USER=beaujr DOCKER_PASS=${{ secrets.DOCKER_PASS }} GITHUB_HEAD_REF=master ARCHTAG=amd64
+      - name: Push the Docker image
+        run: make docker_push DOCKER_USER=beaujr DOCKER_PASS=${{ secrets.DOCKER_PASS }} GITHUB_HEAD_REF=master ARCHTAG=arm

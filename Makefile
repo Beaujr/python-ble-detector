@@ -40,10 +40,10 @@ endif
 
 docker_push: docker-login
 	set -e; \
-	docker tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG) $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT) ; \
-	docker push $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT);
+	docker tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)-$(ARCH) $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCH) ; \
+	docker push $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCHTAG);
 ifeq ($(GITHUB_HEAD_REF),master)
-	docker tag $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT) $(REGISTRY)/$(APP_NAME):latest
+	docker tag $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCHTAG) $(REGISTRY)/$(APP_NAME):latest
 	docker push  $(REGISTRY)/$(APP_NAME):latest
 endif
 
@@ -53,7 +53,7 @@ ifeq ($(GITHUB_HEAD_REF),master)
 	docker buildx build \
 	--platform linux/$(ARCH) \
 	--output "type=image,push=false" \
-	--tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG) \
+	--tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)-$(ARCHTAG) \
 	--file $(DOCKERFILES)/$(DOCKERFILE) $(DOCKERFILES)
 else
 	docker build \
