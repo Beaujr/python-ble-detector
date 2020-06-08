@@ -38,6 +38,8 @@ else
   endif
 endif
 
+docker-build-and-push: | docker_build docker_push
+
 docker_push: docker-login
 	set -e; \
 	docker tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)-$(ARCHTAG) $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCHTAG) ; \
