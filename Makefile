@@ -38,7 +38,7 @@ else
   endif
 endif
 
-docker-build-and-push: | docker_build docker_push
+docker-build-and-push: | docker-login docker_build docker_push
 
 docker_push: docker-login
 	set -e; \
@@ -54,7 +54,7 @@ docker_build:
 ifeq ($(GITHUB_WORKFLOW),master)
 	docker buildx build \
 	--platform $(ARCH) \
-	--output "type=image,push=false" \
+	--output "type=image,push=true" \
 	--tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)-$(ARCHTAG) \
 	--file $(DOCKERFILES)/$(DOCKERFILE) $(DOCKERFILES)
 else
