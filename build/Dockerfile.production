@@ -1,0 +1,9 @@
+#FROM python:3.6-slim-buster
+FROM --platform=$BUILDPLATFORM python:3.6-slim-buster 
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+RUN apt-get update
+RUN apt-get install build-essential bluez bluez-tools python-dev python-pip libglib2.0-dev libboost-python-dev libboost-thread-dev libbluetooth-dev -y
+
+RUN pip3 install pybluez bluepy
+RUN echo "ControllerMode = le" >> /etc/bluetooth/main.conf

@@ -42,10 +42,10 @@ docker-build-and-push: | docker-login docker_build
 
 docker_push: docker-login
 	set -e; \
-	docker tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)-$(ARCHTAG) $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCHTAG) ; \
-	docker push $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCHTAG);
+	docker tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG) $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT) ; \
+	docker push $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT);
 ifeq ($(GITHUB_WORKFLOW),master)
-	docker tag $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCHTAG) $(REGISTRY)/$(APP_NAME):latest
+	docker tag $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT) $(REGISTRY)/$(APP_NAME):latest
 	docker push  $(REGISTRY)/$(APP_NAME):latest
 endif
 
@@ -53,7 +53,7 @@ endif
 docker_build:
 ifeq ($(GITHUB_WORKFLOW),master)
 	docker buildx build \
-	--platform $(ARCH) \
+	--platform linux/amd64,linux/arm/v6 \
 	--output "type=image,push=true" \
 	--tag $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT) \
 	--file $(DOCKERFILES)/$(DOCKERFILE) $(DOCKERFILES)
