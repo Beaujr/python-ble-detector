@@ -51,7 +51,7 @@ endif
 docker_build:
 ifeq ($(GITHUB_WORKFLOW),master)
 	docker buildx build \
-	--platform linux/$(ARCH) \
+	--platform $(ARCH) \
 	--output "type=image,push=false" \
 	--tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)-$(ARCHTAG) \
 	--file $(DOCKERFILES)/$(DOCKERFILE) $(DOCKERFILES)
