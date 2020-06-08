@@ -40,7 +40,7 @@ endif
 
 docker_push: docker-login
 	set -e; \
-	docker tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)-$(ARCH) $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCH) ; \
+	docker tag $(REGISTRY)/$(APP_NAME):$(BUILD_TAG)-$(ARCHTAG) $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCHTAG) ; \
 	docker push $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCHTAG);
 ifeq ($(GITHUB_HEAD_REF),master)
 	docker tag $(REGISTRY)/$(APP_NAME):$(IMAGE_TAG)-$(GIT_SHORT_COMMIT)-$(ARCHTAG) $(REGISTRY)/$(APP_NAME):latest
