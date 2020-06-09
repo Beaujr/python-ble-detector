@@ -1,5 +1,5 @@
 #FROM python:3.7-slim-buster
-FROM --platform=$BUILDPLATFORM python:3.7-slim-buster
+FROM --platform=$BUILDPLATFORM python@sha256:671c2e40b18e5eba5047dcaa15f83940cc37f33369513c6c608b736e9fed6fbc
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 RUN apt-get update
