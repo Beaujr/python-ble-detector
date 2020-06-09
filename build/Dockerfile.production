@@ -1,9 +1,11 @@
-#FROM python:3.6-slim-buster
-FROM --platform=$BUILDPLATFORM python:3.6-slim-buster 
+#FROM python:3.7-slim-buster
+FROM --platform=$BUILDPLATFORM python:3.7-slim-buster
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 RUN apt-get update
 RUN apt-get install build-essential bluez bluez-tools python-dev python-pip libglib2.0-dev libboost-python-dev libboost-thread-dev libbluetooth-dev -y
 
 RUN pip3 install pybluez bluepy
+RUN pip3 install https://www.piwheels.org/simple/grpcio/grpcio-1.30.0rc1-cp37-cp37m-linux_armv6l.whl#sha256=76355258b23889570881a18a7a5ed4e303b1e5e5fe03a521f95d2ff2f5449cf4
+RUN pip3 install https://www.piwheels.org/simple/grpcio-tools/grpcio_tools-1.30.0rc1-cp37-cp37m-linux_armv6l.whl#sha256=6d7003775e68280284ebe574666e5503fa3ca71fa143b66f8398d105ea7c6a5b
 RUN echo "ControllerMode = le" >> /etc/bluetooth/main.conf
